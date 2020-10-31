@@ -1,0 +1,20 @@
+import { HttpAction } from "../types";
+import { addMethod } from "./state";
+
+const BaseMethod = (action: HttpAction) => (route: string = "/") => (
+  target: any,
+  methodName: string,
+  descriptor: PropertyDescriptor
+) => {
+  addMethod(target, route, action, methodName);
+};
+
+export const Get = BaseMethod(HttpAction.GET);
+export const Head = BaseMethod(HttpAction.HEAD);
+export const Post = BaseMethod(HttpAction.POST);
+export const Put = BaseMethod(HttpAction.PUT);
+export const Delete = BaseMethod(HttpAction.DELETE);
+export const Connect = BaseMethod(HttpAction.CONNECT);
+export const Options = BaseMethod(HttpAction.OPTIONS);
+export const Trace = BaseMethod(HttpAction.TRACE);
+export const Path = BaseMethod(HttpAction.PATCH);

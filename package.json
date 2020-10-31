@@ -1,0 +1,29 @@
+{
+  "name": "form-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev --no-notify examples/index.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^4.17.8",
+    "ajv": "^7.0.0-beta.2",
+    "express": "^4.17.1",
+    "pino": "^6.7.0",
+    "pino-http": "^5.3.0",
+    "typescript-json-schema": "^0.43.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.6",
+    "@types/pino": "^6.3.3",
+    "@types/pino-http": "^5.0.5",
+    "ts-node": "^9.0.0",
+    "ts-node-dev": "^1.0.0",
+    "typescript": "^4.0.5"
+  }
+}
