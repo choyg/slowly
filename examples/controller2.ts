@@ -3,14 +3,14 @@ import { Req } from "../src/decorators/args";
 import { Controller } from "../src/decorators/controller";
 import { Get } from "../src/decorators/method";
 
-@Controller("/lmao")
+@Controller("/")
 export class UserController {
   @Get()
   async thisisdifferent(@Req() req: Request, body: string) {
     console.log("wow");
   }
 
-  @Get()
+  @Get("/wowanoth/thing/a")
   async ok(@Req() req: Request, body: string) {
     console.log("wow");
   }

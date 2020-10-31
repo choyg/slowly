@@ -1,7 +1,7 @@
 import { HttpAction } from "../types";
 import { addMethod } from "./state";
 
-const BaseMethod = (action: HttpAction) => (route: string = "/") => (
+const BaseMethod = (action: HttpAction) => (route: string = "") => (
   target: any,
   methodName: string,
   descriptor: PropertyDescriptor

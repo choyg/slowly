@@ -12,15 +12,16 @@ export enum ArgType {
 }
 
 export enum HttpAction {
-  GET,
-  HEAD,
-  POST,
-  PUT,
-  DELETE,
-  CONNECT,
-  OPTIONS,
-  TRACE,
-  PATCH,
+  GET = "get",
+  HEAD = "head",
+  POST = "post",
+  PUT = "put",
+  DELETE = "delete",
+  CONNECT = "connect",
+  OPTION = "option",
+  TRACE = "trace",
+  PATCH = "patch",
+  ALL = "all",
 }
 
 export interface ControllerData {

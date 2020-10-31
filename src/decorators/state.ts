@@ -36,8 +36,8 @@ export const addArg = (
 };
 
 export class MethodStore {
-  route?: string;
-  name?: string;
+  route!: string;
+  name!: string;
   args: ArgStore[] = [];
-  action?: HttpAction;
+  action!: HttpAction;
 }
