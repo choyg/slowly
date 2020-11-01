@@ -11,7 +11,7 @@ export class UserController {
   }
 
   @Get("/wowanoth/thing/a")
-  async ok(@Req() req: Request, body: string) {
+  ok(@Req() req: Request, body: string) {
     console.log("wow");
   }
 }

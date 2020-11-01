@@ -15,6 +15,6 @@ export const Post = BaseMethod(HttpAction.POST);
 export const Put = BaseMethod(HttpAction.PUT);
 export const Delete = BaseMethod(HttpAction.DELETE);
 export const Connect = BaseMethod(HttpAction.CONNECT);
-export const Options = BaseMethod(HttpAction.OPTIONS);
+export const Option = BaseMethod(HttpAction.OPTION);
 export const Trace = BaseMethod(HttpAction.TRACE);
 export const Path = BaseMethod(HttpAction.PATCH);

@@ -3,7 +3,7 @@ import express from "express";
 import { resolve } from "path";
 import pino from "pino-http";
 import * as TJS from "typescript-json-schema";
-import { loadRoutes } from "../src";
+import SlowServer from "../src";
 import { ControllerMethods, Controllers } from "../src/decorators/state";
 import { Logger } from "../src/logger/logger";
 import { UserController } from "./controller";
@@ -19,10 +19,10 @@ async function bootstrap() {
   app.use(pino());
   app.use(router);
 
-  loadRoutes({
+  const slow = new SlowServer({
     controllers: [UserController, a],
-    router,
   });
+  slow.useExpress(router);
 
   app.listen(port, () => {
     Logger.info(`Listening on port ${port}`);

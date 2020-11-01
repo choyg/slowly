@@ -1,6 +1,7 @@
 export interface ArgStore {
   type: ArgType;
   index: number;
+  options?: any;
 }
 
 export enum ArgType {
@@ -8,7 +9,8 @@ export enum ArgType {
   RES,
   BODY,
   PARAM,
-  HEADERS,
+  PARAMS,
+  HEADER,
 }
 
 export enum HttpAction {
