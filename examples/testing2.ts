@@ -1,3 +1,3 @@
-export interface TestSchema {
-  differentschema: string;
+export class TestSchema {
+  differentschema!: string;
 }

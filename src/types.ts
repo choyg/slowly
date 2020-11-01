@@ -5,12 +5,13 @@ export interface ArgStore {
 }
 
 export enum ArgType {
-  REQ,
-  RES,
-  BODY,
-  PARAM,
-  PARAMS,
-  HEADER,
+  REQ = "req",
+  RES = "res",
+  BODY = "body",
+  PARAM = "param",
+  PARAMS = "params",
+  HEADER = "header",
+  QUERYPARAMS = "queryparams",
 }
 
 export enum HttpAction {

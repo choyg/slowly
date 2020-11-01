@@ -1,4 +1,4 @@
-import { IRouter, Request, Response } from "express";
+import { IRouter, NextFunction, Request, Response } from "express";
 import { Container, DefaultContainer } from "./container";
 import {
   ControllerMethods,
@@ -7,14 +7,15 @@ import {
 } from "./decorators/state";
 import { ArgStore, ArgType } from "./types";
 import { resolvePath } from "./utils/resolveUrl";
-import { getStatusCode } from "./utils/statusCode";
+import { Validator } from "./validator";
 
 export interface LoaderOptions {
   controllers: Function[];
   container?: Container;
-  onError?: (err: Error) => void | Promise<void>;
+  validator?: Validator;
 }
 export default class {
+  private readonly validator?: Validator;
   private readonly container: Container;
   private readonly prototypes: Set<Object>;
   private readonly routes: Route[] = [];
@@ -23,6 +24,7 @@ export default class {
       options.controllers.map((constructor) => constructor.prototype)
     );
     this.container = options.container || new DefaultContainer();
+    this.validator = options.validator;
     this.init();
   }
 
@@ -79,48 +81,87 @@ export default class {
     return method.bind(instance);
   }
 
-  private getArgs(req: Request, res: Response, { args }: Route) {
+  private getArgs(req: Request, res: Response, { args, constructor }: Route) {
     const argList: any[] = [];
+    let customRes = false;
     args.forEach((arg) => {
       if (argList.length < arg.index) {
         const delta = arg.index - argList.length;
         argList.push(...new Array(delta).fill(undefined));
       }
+      // TODO move validation step into middleware
       switch (arg.type) {
         case ArgType.REQ:
           return argList.push(req);
         case ArgType.RES:
+          customRes = true;
           return argList.push(res);
+        case ArgType.PARAMS:
+          if (this.validator) {
+            this.validator.validate({
+              constructor,
+              data: req.params,
+              req: req,
+              paramMeta: arg.options,
+              argType: "params",
+            });
+          }
+          return argList.push(req.params);
+        case ArgType.QUERYPARAMS:
+          if (this.validator) {
+            this.validator.validate({
+              constructor,
+              data: req.query,
+              req: req,
+              paramMeta: arg.options,
+              argType: "queryparams",
+            });
+          }
+          return argList.push(req.query);
+        case ArgType.BODY:
+          if (this.validator) {
+            this.validator.validate({
+              constructor,
+              data: req.body,
+              req: req,
+              paramMeta: arg.options,
+              argType: "body",
+            });
+          }
+          return argList.push(req.body);
       }
     });
 
-    return argList;
+    return {
+      args: argList,
+      customRes,
+    };
   }
 
   useExpress(router: IRouter) {
     this.routes.forEach((route) => {
       (router as any)[route.method.action.toString()](
         route.path,
-        async (req: Request, res: Response) => {
+        async (req: Request, res: Response, next: NextFunction) => {
           try {
-            const args = this.getArgs(req, res, route);
+            const { args, customRes } = this.getArgs(req, res, route);
             const method = await this.getMethod(route);
             const response = await method(...args);
+
+            // If the user injected @Res, they must send a response themselves
+            if (customRes) {
+              return;
+            }
+
             if (response != null) {
               res.json(response);
             } else {
               res.sendStatus(204);
             }
           } catch (err) {
-            res.status(getStatusCode(err.statusCode));
-            if (err.data) {
-              res.json(err.data);
-            } else {
-              res.sendStatus(500);
-            }
-            if (this.options.onError) {
-              this.options.onError.call(this.options.onError, err);
-            }
+            // Pass errors to Express default error handler
+            // Allows users to define error handler outside of library
+            next(err);
           }
         }
       );

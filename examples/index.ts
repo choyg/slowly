@@ -2,6 +2,7 @@ import Ajv from "ajv";
 import express from "express";
 import { resolve } from "path";
 import pino from "pino-http";
+import "reflect-metadata";
 import * as TJS from "typescript-json-schema";
 import SlowServer from "../src";
 import { ControllerMethods, Controllers } from "../src/decorators/state";
@@ -16,6 +17,7 @@ async function bootstrap() {
 
   const generator = compileSchemas();
 
+  app.use(express.json());
   app.use(pino());
   app.use(router);
 

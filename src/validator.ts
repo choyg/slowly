@@ -1,3 +1,13 @@
+import { Request } from "express";
+
 export interface Validator {
-  validate: (constructor: Function, data: Object) => boolean;
+  validate: (arg: ValidateArg) => boolean;
+}
+
+export interface ValidateArg {
+  req: Request;
+  constructor: Function;
+  data: Object;
+  paramMeta: Function;
+  argType: "header" | "params" | "queryparams" | "body";
 }

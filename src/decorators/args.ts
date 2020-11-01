@@ -6,21 +6,11 @@ const BaseArg = (type: ArgType) => () => (
   method: MethodName,
   parameterIndex: number
 ) => {
+  const paramType = Reflect.getMetadata("design:paramtypes", prototype, method);
   addArg(prototype, method, {
     index: parameterIndex,
     type,
-  });
-};
-
-export const Params = (constructor: Function) => (
-  prototype: Object,
-  method: MethodName,
-  parameterIndex: number
-) => {
-  addArg(prototype, method, {
-    index: parameterIndex,
-    type: ArgType.PARAMS,
-    options: constructor,
+    options: paramType,
   });
 };
 
@@ -28,4 +18,6 @@ export const Req = BaseArg(ArgType.REQ);
 export const Res = BaseArg(ArgType.RES);
 export const Body = BaseArg(ArgType.BODY);
 export const Param = BaseArg(ArgType.PARAM);
+export const Params = BaseArg(ArgType.PARAMS);
+export const QueryParams = BaseArg(ArgType.QUERYPARAMS);
 export const Header = BaseArg(ArgType.HEADER);

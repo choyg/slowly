@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { Body, Req, Res } from "../src/decorators/args";
+import { Body, Params, QueryParams } from "../src/decorators/args";
 import { Controller } from "../src/decorators/controller";
-import { Get } from "../src/decorators/method";
+import { Get, Post } from "../src/decorators/method";
+import { TestSchema } from "./testing2";
 
 @Controller("/users")
 export class UserController {
@@ -10,18 +10,24 @@ export class UserController {
     this.myval = "test";
   }
   @Get()
-  async getUserById(@Req() req: Request, lol: number, @Body() body: string) {
-    const a = new Error("");
-    console.error(a.stack);
+  async getUserById(@Body() body: string) {
+    throw new Error("ok");
   }
 
   @Get(":id")
-  async getUserById2(@Res() res: Response, @Req() req: Request, body: string) {
-    console.log({
-      res,
-    });
+  async getUserById2(@QueryParams() query: any, @Params() params: TestSchema) {
     return {
       a: this.myval,
+      params,
+      query,
+    };
+  }
+
+  @Post()
+  async createUser(@QueryParams() query: any, @Body() body: any, test: string) {
+    return {
+      body,
+      query,
     };
   }
 }
