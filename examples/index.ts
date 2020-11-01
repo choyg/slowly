@@ -6,7 +6,6 @@ import "reflect-metadata";
 import * as TJS from "typescript-json-schema";
 import SlowServer from "../src";
 import { ControllerMethods, Controllers } from "../src/decorators/state";
-import { Logger } from "../src/logger/logger";
 import { UserController } from "./controller";
 import { UserController as a } from "./controller2";
 
@@ -27,7 +26,7 @@ async function bootstrap() {
   slow.useExpress(router);
 
   app.listen(port, () => {
-    Logger.info(`Listening on port ${port}`);
+    console.info(`Listening on port ${port}`);
   });
 }
 
@@ -37,7 +36,7 @@ console.log(ControllerMethods);
 let ajv: Ajv;
 
 function compileSchemas() {
-  Logger.trace("Compiling JSON schemas");
+  console.trace("Compiling JSON schemas");
 
   const options: TJS.PartialArgs = {
     required: true,
@@ -59,7 +58,7 @@ function compileSchemas() {
 
   const symbols = generator.getMainFileSymbols(program);
   const schemas = generator.getSchemaForSymbols(symbols).definitions;
-  Logger.info(schemas!);
+  console.info(schemas!);
   if (!schemas) {
     throw new Error("Failed to retrieve generated schemas");
   }
@@ -68,7 +67,7 @@ function compileSchemas() {
     schemas,
   });
 
-  Logger.trace("Finished compiling JSON schemas");
+  console.trace("Finished compiling JSON schemas");
   return generator;
 }
 
