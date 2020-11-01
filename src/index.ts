@@ -1,19 +1,11 @@
 import { IRouter, NextFunction, Request, Response } from "express";
+import "reflect-metadata";
 import { Container, DefaultContainer } from "./container";
-import {
-  ControllerMethods,
-  Controllers,
-  MethodStore,
-} from "./decorators/state";
-import { ArgStore, ArgType } from "./types";
+import { ControllerMethods, Controllers } from "./decorators/state";
+import { ArgType, LoaderOptions, Route } from "./types";
 import { resolvePath } from "./utils/resolveUrl";
 import { Validator } from "./validator";
 
-export interface LoaderOptions {
-  controllers: Function[];
-  container?: Container;
-  validator?: Validator;
-}
 export default class {
   private readonly validator?: Validator;
   private readonly container: Container;
@@ -169,10 +161,6 @@ export default class {
   }
 }
 
-interface Route {
-  prototype: Object;
-  constructor: Function;
-  path: string;
-  method: MethodStore;
-  args: ArgStore[];
-}
+export { Container } from "./container";
+export * from "./decorators";
+export * from "./validator";

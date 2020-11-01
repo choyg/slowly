@@ -1,6 +1,4 @@
-import { Body, Params, QueryParams } from "../src/decorators/args";
-import { Controller } from "../src/decorators/controller";
-import { Get, Post } from "../src/decorators/method";
+import { Body, Controller, Get, Params, Post, QueryParams } from "slowtify";
 import { TestSchema } from "./testing2";
 
 @Controller("/users")

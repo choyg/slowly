@@ -1,7 +1,5 @@
 import { Request } from "express";
-import { Req } from "../src/decorators/args";
-import { Controller } from "../src/decorators/controller";
-import { Get } from "../src/decorators/method";
+import { Controller, Get, Req } from "slowtify";
 
 @Controller("/")
 export class UserController {

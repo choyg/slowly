@@ -1,3 +1,7 @@
+import { Container } from "./container";
+import { MethodStore } from "./decorators/state";
+import { Validator } from "./validator";
+
 export interface ArgStore {
   type: ArgType;
   index: number;
@@ -37,3 +41,17 @@ export interface ParamMeta {
 }
 
 export type MethodName = string | symbol;
+
+export interface Route {
+  prototype: Object;
+  constructor: Function;
+  path: string;
+  method: MethodStore;
+  args: ArgStore[];
+}
+
+export interface LoaderOptions {
+  controllers: Function[];
+  container?: Container;
+  validator?: Validator;
+}

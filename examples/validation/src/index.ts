@@ -2,10 +2,8 @@ import Ajv from "ajv";
 import express from "express";
 import { resolve } from "path";
 import pino from "pino-http";
-import "reflect-metadata";
+import Slowtify from "slowtify";
 import * as TJS from "typescript-json-schema";
-import SlowServer from "../src";
-import { ControllerMethods, Controllers } from "../src/decorators/state";
 import { UserController } from "./controller";
 import { UserController as a } from "./controller2";
 
@@ -20,7 +18,7 @@ async function bootstrap() {
   app.use(pino());
   app.use(router);
 
-  const slow = new SlowServer({
+  const slow = new Slowtify({
     controllers: [UserController, a],
   });
   slow.useExpress(router);
@@ -30,13 +28,10 @@ async function bootstrap() {
   });
 }
 
-console.log(Controllers);
-console.log(ControllerMethods);
-
 let ajv: Ajv;
 
 function compileSchemas() {
-  console.trace("Compiling JSON schemas");
+  console.info("Compiling JSON schemas");
 
   const options: TJS.PartialArgs = {
     required: true,
@@ -67,7 +62,7 @@ function compileSchemas() {
     schemas,
   });
 
-  console.trace("Finished compiling JSON schemas");
+  console.info("Finished compiling JSON schemas");
   return generator;
 }
 
