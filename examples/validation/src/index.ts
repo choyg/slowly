@@ -5,7 +5,6 @@ import { resolve } from "path";
 import pino from "pino-http";
 import Slowtify from "slowtify";
 import * as TJS from "typescript-json-schema";
-import { UserController as a } from "./controller2";
 import { UserController } from "./user/controller";
 import { JsonSchemaValidator } from "./validator";
 
@@ -21,7 +20,7 @@ async function bootstrap() {
   const ajv = compileSchemas();
 
   const slow = new Slowtify({
-    controllers: [UserController, a],
+    controllers: [UserController],
     validator: new JsonSchemaValidator(ajv),
   });
   slow.useExpress(router);
@@ -40,10 +39,7 @@ function compileSchemas() {
     defaultNumberType: "integer",
   };
 
-  const files: string[] = [
-    resolve(__dirname, "user/schema.ts"),
-    resolve(__dirname, "testing2.ts"),
-  ];
+  const files: string[] = [resolve(__dirname, "user/schema.ts")];
   const program = TJS.getProgramFromFiles(files, null);
 
   const generator = TJS.buildGenerator(program, options);
