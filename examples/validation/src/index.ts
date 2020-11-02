@@ -1,25 +1,28 @@
 import Ajv from "ajv";
+import addFormats from "ajv-formats";
 import express from "express";
 import { resolve } from "path";
 import pino from "pino-http";
 import Slowtify from "slowtify";
 import * as TJS from "typescript-json-schema";
-import { UserController } from "./controller";
 import { UserController as a } from "./controller2";
+import { UserController } from "./user/controller";
+import { JsonSchemaValidator } from "./validator";
 
 async function bootstrap() {
   const port = process.env.PORT || 3000;
   const router = express.Router();
   const app = express();
 
-  const generator = compileSchemas();
-
   app.use(express.json());
   app.use(pino());
   app.use(router);
 
+  const ajv = compileSchemas();
+
   const slow = new Slowtify({
     controllers: [UserController, a],
+    validator: new JsonSchemaValidator(ajv),
   });
   slow.useExpress(router);
 
@@ -28,8 +31,6 @@ async function bootstrap() {
   });
 }
 
-let ajv: Ajv;
-
 function compileSchemas() {
   console.info("Compiling JSON schemas");
 
@@ -37,11 +38,10 @@ function compileSchemas() {
     required: true,
     strictNullChecks: true,
     defaultNumberType: "integer",
-    uniqueNames: true,
   };
 
   const files: string[] = [
-    resolve(__dirname, "testing.ts"),
+    resolve(__dirname, "user/schema.ts"),
     resolve(__dirname, "testing2.ts"),
   ];
   const program = TJS.getProgramFromFiles(files, null);
@@ -53,17 +53,21 @@ function compileSchemas() {
 
   const symbols = generator.getMainFileSymbols(program);
   const schemas = generator.getSchemaForSymbols(symbols).definitions;
-  console.info(schemas!);
   if (!schemas) {
     throw new Error("Failed to retrieve generated schemas");
   }
 
-  ajv = new Ajv({
+  const ajv = new Ajv({
     schemas,
+    removeAdditional: "all",
+    validateSchema: true,
+    validateFormats: true,
+    coerceTypes: "array",
   });
+  addFormats(ajv);
 
   console.info("Finished compiling JSON schemas");
-  return generator;
+  return ajv;
 }
 
 bootstrap();

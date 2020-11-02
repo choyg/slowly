@@ -45,3 +45,9 @@ export class UserController {
   }
 }
 ```
+
+See the [full example](./examples/validation) that adds input validation.
+
+# License
+
+[MIT](./LICENSE)

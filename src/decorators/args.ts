@@ -10,7 +10,7 @@ const BaseArg = (type: ArgType) => () => (
   addArg(prototype, method, {
     index: parameterIndex,
     type,
-    options: paramType,
+    options: paramType[parameterIndex],
   });
 };
 

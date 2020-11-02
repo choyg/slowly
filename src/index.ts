@@ -1,7 +1,7 @@
 import { IRouter, NextFunction, Request, Response } from "express";
 import "reflect-metadata";
 import { Container, DefaultContainer } from "./container";
-import { ControllerMethods, Controllers } from "./decorators/state";
+import { ControllerMethods, Controllers, Schemas } from "./decorators/state";
 import { ArgType, LoaderOptions, Route } from "./types";
 import { resolvePath } from "./utils/resolveUrl";
 import { Validator } from "./validator";
@@ -18,6 +18,13 @@ export default class {
     this.container = options.container || new DefaultContainer();
     this.validator = options.validator;
     this.init();
+  }
+
+  /**
+   * List of schema constructors registered with @Schema
+   */
+  getSchemas() {
+    return [...Schemas.values()];
   }
 
   private init() {
@@ -90,7 +97,7 @@ export default class {
           return argList.push(res);
         case ArgType.PARAMS:
           if (this.validator) {
-            this.validator.validate({
+            req.params = this.validator.validate({
               constructor,
               data: req.params,
               req: req,
@@ -101,7 +108,7 @@ export default class {
           return argList.push(req.params);
         case ArgType.QUERYPARAMS:
           if (this.validator) {
-            this.validator.validate({
+            req.query = this.validator.validate({
               constructor,
               data: req.query,
               req: req,
@@ -112,7 +119,7 @@ export default class {
           return argList.push(req.query);
         case ArgType.BODY:
           if (this.validator) {
-            this.validator.validate({
+            req.body = this.validator.validate({
               constructor,
               data: req.body,
               req: req,
@@ -163,4 +170,5 @@ export default class {
 
 export { Container } from "./container";
 export * from "./decorators";
+export * from "./errors";
 export * from "./validator";

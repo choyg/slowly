@@ -5,6 +5,7 @@ export const ControllerMethods = new Map<
   Object,
   Map<MethodName, MethodStore>
 >();
+export const Schemas = new Set<Function>();
 
 export const addMethod = (
   proto: Object,
@@ -33,6 +34,10 @@ export const addArg = (
   method.args.push(param);
   controller.set(methodName, method);
   ControllerMethods.set(proto, controller);
+};
+
+export const addSchema = (constructor: Function) => {
+  Schemas.add(constructor);
 };
 
 export class MethodStore {
