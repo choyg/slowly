@@ -1,6 +1,15 @@
-import { ArgStore, ControllerData, HttpAction, MethodName } from "../types";
+import {
+  ArgStore,
+  ControllerData,
+  HttpAction,
+  MethodName,
+  MethodMetadata,
+} from "../types";
 
 export const Controllers = new Map<Object, ControllerData>();
+/**
+ * Prototype => Map<MethodName, MethodStore>
+ */
 export const ControllerMethods = new Map<
   Object,
   Map<MethodName, MethodStore>
@@ -11,7 +20,8 @@ export const addMethod = (
   proto: Object,
   route: string,
   action: HttpAction,
-  name: string
+  name: string,
+  metadata: MethodMetadata
 ) => {
   const controller =
     ControllerMethods.get(proto) || new Map<MethodName, MethodStore>();
@@ -19,6 +29,10 @@ export const addMethod = (
   method.action = action;
   method.name = name;
   method.route = route;
+  method.metadata = {
+    ...method.metadata,
+    ...metadata,
+  };
   controller.set(name, method);
   ControllerMethods.set(proto, controller);
 };
@@ -45,4 +59,5 @@ export class MethodStore {
   name!: string;
   args: ArgStore[] = [];
   action!: HttpAction;
+  metadata: MethodMetadata = {};
 }

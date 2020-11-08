@@ -23,6 +23,12 @@ async function bootstrap() {
     controllers: [UserController],
     validator: new JsonSchemaValidator(ajv),
   });
+  slow.use((req: any, res, next) => {
+    if (req.metadata?.permissions) {
+      console.log("Metadata: " + JSON.stringify(req.metadata));
+    }
+    next();
+  });
   slow.useExpress(router);
 
   app.listen(port, () => {

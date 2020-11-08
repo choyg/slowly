@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post, QueryParams } from "slowtify";
+import { Body, Controller, Get, Post, QueryParams, Req } from "slowtify";
 import { CreateUser } from "./schema";
+import { Request } from "express";
 
 @Controller("/users")
 export class UserController {
-  @Get()
-  async getUserById(@QueryParams() query: CreateUser) {
+  @Get("/", { permissions: ["test"] })
+  async getUserById(@Req() req: Request, @QueryParams() query: CreateUser) {
     return query;
   }
 

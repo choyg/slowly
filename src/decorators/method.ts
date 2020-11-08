@@ -1,12 +1,11 @@
-import { HttpAction } from "../types";
+import { HttpAction, MethodMetadata } from "../types";
 import { addMethod } from "./state";
 
-const BaseMethod = (action: HttpAction) => (route: string = "") => (
-  target: any,
-  methodName: string,
-  descriptor: PropertyDescriptor
-) => {
-  addMethod(target, route, action, methodName);
+const BaseMethod = (action: HttpAction) => (
+  route: string = "",
+  options: MethodMetadata = {}
+) => (target: any, methodName: string, descriptor: PropertyDescriptor) => {
+  addMethod(target, route, action, methodName, options);
 };
 
 export const Get = BaseMethod(HttpAction.GET);

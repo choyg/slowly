@@ -54,4 +54,18 @@ export interface LoaderOptions {
   controllers: Function[];
   container?: Container;
   validator?: Validator;
+  /**
+   * The property to attach request metadata to on the `req` object.
+   * @default metadata req.metadata
+   */
+  metadataProperty?: string;
 }
+
+export const DefaultLoaderOptions: LoaderOptions = {
+  controllers: [],
+  metadataProperty: "metadata",
+};
+
+export interface MethodMetadata {}
+
+export const DefaultMethodOptions: MethodMetadata = {};

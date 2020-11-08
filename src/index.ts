@@ -1,8 +1,15 @@
-import { IRouter, NextFunction, Request, Response } from "express";
+import {
+  IRouter,
+  NextFunction,
+  Request,
+  Response,
+  RequestHandler,
+  Router,
+} from "express";
 import "reflect-metadata";
 import { Container, DefaultContainer } from "./container";
-import { ControllerMethods, Controllers, Schemas } from "./decorators/state";
-import { ArgType, LoaderOptions, Route } from "./types";
+import { ControllerMethods, Controllers } from "./decorators/state";
+import { ArgType, LoaderOptions, Route, DefaultLoaderOptions } from "./types";
 import { resolvePath } from "./utils/resolveUrl";
 import { Validator } from "./validator";
 
@@ -10,21 +17,28 @@ export default class {
   private readonly validator?: Validator;
   private readonly container: Container;
   private readonly prototypes: Set<Object>;
-  private readonly routes: Route[] = [];
-  constructor(private readonly options: LoaderOptions) {
-    this.prototypes = new Set(
-      options.controllers.map((constructor) => constructor.prototype)
-    );
-    this.container = options.container || new DefaultContainer();
-    this.validator = options.validator;
-    this.init();
+  private readonly middleware: RequestHandler[] = [];
+  private readonly options: LoaderOptions;
+  readonly routes: Route[] = [];
+
+  getState() {
+    return {
+      controllers: Controllers,
+      methods: ControllerMethods,
+    };
   }
 
-  /**
-   * List of schema constructors registered with @Schema
-   */
-  getSchemas() {
-    return [...Schemas.values()];
+  constructor(options: LoaderOptions) {
+    this.options = {
+      ...DefaultLoaderOptions,
+      ...options,
+    };
+    this.prototypes = new Set(
+      this.options.controllers.map((constructor) => constructor.prototype)
+    );
+    this.container = this.options.container || new DefaultContainer();
+    this.validator = this.options.validator;
+    this.init();
   }
 
   private init() {
@@ -137,10 +151,26 @@ export default class {
     };
   }
 
+  /**
+   * Add middleware to run before each route.
+   * The req object will contain metadata set on the route method.
+   * For example, `@Get('/', { foo: 'bar' })` will populate `req.metadata` with
+   * the Object `{ foo: 'bar' }`.
+   * @param middleware One or more middleware functions
+   */
+  use(...middleware: RequestHandler[]) {
+    this.middleware.push(...middleware);
+  }
+
   useExpress(router: IRouter) {
     this.routes.forEach((route) => {
       (router as any)[route.method.action.toString()](
         route.path,
+        async (req: Request, res: Response, next: NextFunction) => {
+          (req as any)[this.options.metadataProperty!] = route.method.metadata;
+          next();
+        },
+        ...this.middleware,
         async (req: Request, res: Response, next: NextFunction) => {
           try {
             const { args, customRes } = this.getArgs(req, res, route);
@@ -167,8 +197,8 @@ export default class {
     });
   }
 }
-
-export { Container } from "./container";
 export * from "./decorators";
 export * from "./errors";
 export * from "./validator";
+export { Container } from "./container";
+export { MethodMetadata } from "./types";
