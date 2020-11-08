@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
-import express from "express";
+import express, { Request } from "express";
 import { resolve } from "path";
 import pino from "pino-http";
 import Slowtify from "slowtify";
@@ -23,7 +23,7 @@ async function bootstrap() {
     controllers: [UserController],
     validator: new JsonSchemaValidator(ajv),
   });
-  slow.use((req: any, res, next) => {
+  slow.use((req: Request, res, next) => {
     if (req.metadata?.permissions) {
       console.log("Metadata: " + JSON.stringify(req.metadata));
     }

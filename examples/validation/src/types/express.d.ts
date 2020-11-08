@@ -1,7 +1,5 @@
 declare namespace Express {
   export interface Request {
-    metadata?: {
-      permissions: string[];
-    };
+    metadata?: import("slowtify").MethodMetadata;
   }
 }

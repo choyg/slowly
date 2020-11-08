@@ -15,7 +15,7 @@
     "express": "^4.17.1",
     "pino-http": "^5.3.0",
     "reflect-metadata": "^0.1.13",
-    "slowtify": "^0.0.3",
+    "slowtify": "^0.0.4",
     "typescript-json-schema": "^0.43.0"
   },
   "devDependencies": {
