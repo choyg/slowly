@@ -14,11 +14,11 @@ import { resolvePath } from "./utils/resolveUrl";
 import { Validator } from "./validator";
 
 export default class {
-  private readonly validator?: Validator;
-  private readonly container: Container;
   private readonly prototypes: Set<Object>;
   private readonly middleware: RequestHandler[] = [];
   private readonly options: LoaderOptions;
+  private validator?: Validator;
+  private container: Container;
   readonly routes: Route[] = [];
 
   getState() {
@@ -26,6 +26,14 @@ export default class {
       controllers: Controllers,
       methods: ControllerMethods,
     };
+  }
+
+  setContainer(container: Container) {
+    this.container = container;
+  }
+
+  setValidator(validator: Validator) {
+    this.validator = validator;
   }
 
   constructor(options: LoaderOptions) {
