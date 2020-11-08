@@ -25,7 +25,7 @@ export enum HttpAction {
   PUT = "put",
   DELETE = "delete",
   CONNECT = "connect",
-  OPTION = "option",
+  OPTIONS = "options",
   TRACE = "trace",
   PATCH = "patch",
   ALL = "all",

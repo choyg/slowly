@@ -164,7 +164,7 @@ export default class {
 
   useExpress(router: IRouter) {
     this.routes.forEach((route) => {
-      (router as any)[route.method.action.toString()](
+      router[route.method.action](
         route.path,
         async (req: Request, res: Response, next: NextFunction) => {
           (req as any)[this.options.metadataProperty!] = route.method.metadata;
