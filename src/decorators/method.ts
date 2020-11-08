@@ -8,6 +8,7 @@ const BaseMethod = (action: HttpAction) => (
   addMethod(target, route, action, methodName, options);
 };
 
+export const All = BaseMethod(HttpAction.ALL);
 export const Get = BaseMethod(HttpAction.GET);
 export const Head = BaseMethod(HttpAction.HEAD);
 export const Post = BaseMethod(HttpAction.POST);
