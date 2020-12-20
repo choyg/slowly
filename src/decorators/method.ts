@@ -17,4 +17,4 @@ export const Delete = BaseMethod(HttpAction.DELETE);
 export const Connect = BaseMethod(HttpAction.CONNECT);
 export const Options = BaseMethod(HttpAction.OPTIONS);
 export const Trace = BaseMethod(HttpAction.TRACE);
-export const Path = BaseMethod(HttpAction.PATCH);
+export const Patch = BaseMethod(HttpAction.PATCH);
