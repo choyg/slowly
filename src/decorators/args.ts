@@ -17,7 +17,6 @@ const BaseArg = (type: ArgType) => () => (
 export const Req = BaseArg(ArgType.REQ);
 export const Res = BaseArg(ArgType.RES);
 export const Body = BaseArg(ArgType.BODY);
-export const Param = BaseArg(ArgType.PARAM);
 export const Params = BaseArg(ArgType.PARAMS);
 export const QueryParams = BaseArg(ArgType.QUERYPARAMS);
 export const Header = BaseArg(ArgType.HEADER);
