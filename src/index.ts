@@ -66,6 +66,11 @@ export default class {
           );
         }
 
+        // No decorator registered for function
+        if (method.route === undefined) {
+          continue;
+        }
+
         const path = resolvePath(controller.route, method.route);
         const args = method.args.sort((a, b) => a.index - b.index);
 
